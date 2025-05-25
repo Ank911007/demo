@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Terraform Deployment UI</title>
+</head>
+<body>
+  <h2>Terraform Template Deployment</h2>
+  <form id="deployForm" enctype="multipart/form-data">
+    <label>Terraform Template (ZIP):</label>
+    <input type="file" name="template" accept=".zip" required><br><br>
+
+    <label>Cloud Provider:</label>
+    <select name="provider" required>
+      <option value="aws">AWS</option>
+      <option value="azure">Azure</option>
+    </select><br><br>
+
+    <label>Access Key:</label>
+    <input type="text" name="access_key" required><br>
+
+    <label>Secret Key:</label>
+    <input type="password" name="secret_key" required><br><br>
+
+    <button type="submit">Deploy</button>
+  </form>
+
+  <pre id="output"></pre>
+
+  <script>
+    const form = document.getElementById("deployForm");
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      const response = await fetch("http://localhost:5000/deploy", {
+        method: "POST",
+        body: formData
+      });
+
+      const result = await response.json();
+      document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+    };
+  </script>
+</body>
+</html>
